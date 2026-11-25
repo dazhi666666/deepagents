@@ -1,0 +1,30 @@
+{
+  "project": "AI4Science",
+  "platformVersion": "0.2.0",
+  "upstreamRepository": "https://github.com/deepseek-ai/deepseek-harness",
+  "upstreamCommit": "fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159",
+  "upstreamLicense": "MIT",
+  "ai4scienceLicense": "pending",
+  "previousUpstreamCommit": "d743267388641bc76f17c45ce8b4c231aed1d32c",
+  "upstreamBranch": "master",
+  "upstreamVersion": "0.2.2-rc.1",
+  "validation": "validation/upstream-0.2.1.json",
+  "hostExceptions": [
+    {
+      "path": "packages/compaction/compaction-basic/src/index.ts",
+      "mode": "100644",
+      "upstreamBlob": "096fa72fe46a1a715a3a34a2a109b4dc379de42b",
+      "forkBlob": "96633c8cf41e115d72ac88467a685f61c8989bb2",
+      "sourceCommit": "78d9e23f45",
+      "reason": "Retain the provider-route-only compaction optimization: replicas of the same effective model and capacity do not trigger switch compaction. This is a deliberate local host difference; no upstream PR exists."
+    },
+    {
+      "path": "packages/compaction/compaction-basic/tests/compaction-basic.spec.ts",
+      "mode": "100644",
+      "upstreamBlob": "cf6780933d9fca175aa7330552d9461e3b72461d",
+      "forkBlob": "7cfbc0cb4aad678bf80a89fd8a073ddeef429f79",
+      "sourceCommit": "78d9e23f45",
+      "reason": "Retain the regression coverage accompanying the provider-route-only compaction optimization. This is a deliberate local host difference; no upstream PR exists."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+# Optional native preset declaration. Model routes, topology and provider grants remain deployment choices.
+- id: ai4science-preset-cerebellum
+  name: '@deepseek-ai/dsh-agent-preset'
+  config:
+    id: ai4science-cerebellum
+    name: Science provider execution
+    description: Starting recommendations for provider semantics and observed execution results.
+    plugins:
+      - name: cordis:group
+        group: true
+        isolate:
+          ai4scienceRoleDefaults: true
+        config:
+          - name: '../preset-defaults.ts'
+            config:
+              instructions: Execute only authorized provider work, respecting declared inputs, outputs, units, resources and cancellation semantics. Read actual execution results before reporting completion. Exchange result references only with both parents' consent and report uncertain equipment state explicitly.
+              tools:
+                - org_discover
+                - org_send_result
+                - send_message
+                - list_agents
+                - wait_agent
+                - execution_describe
+                - execution_submit
+                - execution_query
+                - execution_wait
+                - execution_cancel
+                - execution_result

@@ -1,0 +1,25 @@
+# Bilingual-pair consistency record for README.md (docs/i18n/README.md): per heading
+# section, a hash of its English and Chinese blocks outside code blocks and generated regions.
+# After editing either side, bring the other along and re-record with:
+#   pnpm run verify-translation-pairing --write integrations/ai4science/greenhouse/laboratory/README.md
+/staged-laboratory-devices:
+  en: 41f053354455ad23
+  zh: 219d1bfb9f4ccf55
+/staged-laboratory-devices/scope:
+  en: 5538ad98641b7980
+  zh: 6216a6f1a28f4370
+/staged-laboratory-devices/run-from-source:
+  en: 57d0796fa68ed193
+  zh: 54acb7f57f282cf8
+/staged-laboratory-devices/physical-operations:
+  en: de405ecfa8318de4
+  zh: c8fa44225e90d30d
+/staged-laboratory-devices/records-and-recovery:
+  en: 53045c82929e8636
+  zh: 2ffaa91fabe9d92c
+/staged-laboratory-devices/native-participants:
+  en: d32c638969df76d7
+  zh: c32166550d618966
+/staged-laboratory-devices/verification:
+  en: 48a69dd9737a4b52
+  zh: 1b8348bfd348aa20

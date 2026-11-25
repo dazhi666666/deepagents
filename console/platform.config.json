@@ -1,0 +1,19 @@
+{
+  "apiVersion": 1,
+  "enabled": true,
+  "hostApi": "0.2",
+  "directory": "./runtime/platform",
+  "pollIntervalMs": 50,
+  "providerCallTimeoutMs": 10000,
+  "management": { "actorId": "deepagents-console", "projects": ["example"], "allowedProviders": ["instrument", "compute"] },
+  "providers": [
+    {
+      "module": "../app/science-harness/integrations/ai4science/platform/providers/instrument.ts",
+      "config": { "id": "instrument", "directory": "./runtime/instrument", "resource": "instrument-1", "tickMs": 25, "reference": 10, "slope": 0.27, "drift": 0.012, "noise": 0.18, "seed": 123 }
+    },
+    {
+      "module": "../app/science-harness/integrations/ai4science/platform/providers/compute.ts",
+      "config": { "id": "compute", "directory": "./runtime/compute", "resource": "compute-1", "tickMs": 100, "chunkSize": 5 }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+# Optional native preset declaration. It recommends tools without granting provider capabilities.
+- id: ai4science-preset-midbrain
+  name: '@deepseek-ai/dsh-agent-preset'
+  config:
+    id: ai4science-midbrain
+    name: Science execution coordination
+    description: Starting recommendations for translating experiment decisions into bounded provider work.
+    plugins:
+      - name: cordis:group
+        group: true
+        isolate:
+          ai4scienceRoleDefaults: true
+        config:
+          - name: '../preset-defaults.ts'
+            config:
+              instructions: Translate approved experiment decisions into bounded provider actions. Use provider descriptions and actual progress feedback, preserve request identity and parent consent, and escalate decisions outside the current requirements. Cancellation requests do not establish that equipment stopped.
+              tools:
+                - org_create
+                - org_discover
+                - org_authorize
+                - org_revoke
+                - org_send_result
+                - org_finish
+                - send_message
+                - list_agents
+                - wait_agent
+                - experiment_create
+                - experiment_claim
+                - experiment_status
+                - experiment_act
+                - experiment_wait
+                - experiment_escalate
+                - experiment_resolve
+                - experiment_finish
+                - experiment_cancel
+                - artifact_publish
+                - artifact_read
+                - execution_describe
+                - execution_submit
+                - execution_query
+                - execution_wait
+                - execution_cancel

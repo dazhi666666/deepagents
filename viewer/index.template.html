@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; font-src 'none'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<title>火星实验室</title>
+<style>/* VIEWER_STYLES */</style>
+</head>
+<body>
+<header class="site-header">
+ <div class="identity"><svg class="brand-symbol" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="17"/><path d="M3 23Q20 4 37 17M8 31L22 10L31 29M10 26H30"/></svg><div><h1>火星实验室</h1><p id="identity-source">离线观察</p></div></div>
+ <nav class="main-nav" aria-label="实验页面">
+  <button data-panel="research" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3H15M10 3V9L4 19Q3 21 6 21H18Q21 21 20 19L14 9V3M7 15H17"/></svg>科研</button>
+  <button data-panel="records" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3H15L19 7V21H6ZM15 3V8H19M9 12H16M9 16H14"/></svg>实验记录</button>
+  <button data-panel="team" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M2 20V17Q2 13 8 13Q14 13 14 17V20M15 14Q21 14 21 18V20"/></svg>AI 工作</button>
+  <button data-panel="resources" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2L5 14H11L10 22L20 9H13Z"/></svg>资源</button>
+  <button data-panel="compare" aria-haspopup="dialog" aria-expanded="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="7" height="15" rx="1"/><rect x="14" y="3" width="7" height="17" rx="1"/></svg>对照</button>
+ </nav>
+ <button class="surface-button scene-button" id="scene-menu-toggle" aria-expanded="false" aria-controls="scene-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8L12 3L21 8L12 13ZM3 12L12 17L21 12M3 16L12 21L21 16"/></svg>场景<svg class="tiny-chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6L8 10L12 6"/></svg></button>
+ <section class="scene-menu" id="scene-menu" aria-label="场景设置" hidden>
+  <label class="world-picker">当前世界<select id="world-picker" aria-label="选择实验世界"></select></label>
+  <h2>移动到</h2><div class="region-list"><button data-region="lab">实验室</button><button data-region="greenhouse-C">温室</button><button data-region="water">水处理</button><button data-region="cold">保存区</button><button data-region="energy">能源</button><button data-region="robot-bay">机器人</button></div>
+  <div class="scene-settings"><label>器材名称<input id="show-labels" type="checkbox" checked></label><label>减少动态效果<input id="reduced-motion" type="checkbox"></label><button class="surface-button" data-panel="equipment">器材列表</button><button class="surface-button" data-panel="map">基地定位</button><button class="surface-button" data-panel="dataset">导入与来源</button></div>
+ </section>
+</header>
+<main id="scene" aria-label="火星实验室场景，可拖动和滚轮缩放"></main><div class="edge-shade" aria-hidden="true"></div>
+<div id="labels" aria-label="场景对象名称"></div>
+<div class="legend" aria-label="工作阶段"><span><i>↘</i>装载</span><span><i>↻</i>处理</span><span><i>Ⅱ</i>待机</span><span><i>!</i>异常</span></div>
+<section class="scene-caption" aria-label="观察位置"><h2 id="location-title">前处理与分析区</h2><p>滚轮缩放，拖动探索</p><button class="source-label source-button" id="source-label" data-panel="dataset">读取运行记录</button></section>
+<div class="view-controls"><button id="pause-view" class="surface-button" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5V19M16 5V19"/></svg><span>暂停观看</span></button><button id="open-replay" class="surface-button" aria-expanded="false" aria-controls="replay-tools">回看</button></div>
+<div class="camera-tools"><div class="zoom-controls" aria-label="镜头缩放"><button id="zoom-out" aria-label="缩小"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19"/></svg></button><output id="zoom-level" aria-label="当前倍率">1.0×</output><button id="zoom-in" aria-label="放大"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12H19M12 5V19"/></svg></button></div><button class="surface-button" id="reset-camera" aria-label="回到实验室局部"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4H9M15 4H20V9M20 15V20H15M9 20H4V15"/><circle cx="12" cy="12" r="3"/></svg><span class="label-word">回到实验室</span></button></div>
+<section id="replay-tools" class="replay-tools" aria-label="历史观看工具" hidden>
+ <div class="replay-top"><button id="play-history">播放过程</button><button id="previous-event" aria-label="上一个物理事件">上一事件</button><button id="next-event" aria-label="下一个物理事件">下一事件</button><label>速度 <select id="replay-speed"><option value="4">4 tick/s</option><option value="12" selected>12 tick/s</option><option value="48">48 tick/s</option><option value="96">96 tick/s</option></select></label><button id="terminal-view">终态</button><button id="close-replay" aria-label="收起回看工具">×</button></div>
+ <label class="replay-range">所见 tick <input id="tick-slider" type="range" min="0" max="2400" step="1" aria-label="所见逻辑时间"><output id="tick-output"></output></label><p id="replay-coverage" class="source-note"></p>
+</section>
+<aside class="device-detail" id="device-detail" aria-labelledby="detail-title" hidden>
+ <button class="detail-close" id="close-detail" aria-label="关闭器材详情"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6"/></svg></button>
+ <p class="detail-kicker" id="detail-kind"></p><h2 id="detail-title"></h2><div class="detail-state"><i id="detail-icon"></i><span id="detail-state"></span></div>
+ <div class="detail-rule"></div><h3>当前操作</h3><p class="operation" id="detail-operation"></p><p class="detail-explainer" id="detail-description"></p><dl id="detail-values"></dl><div class="disclosure" id="detail-health"></div>
+ <div class="detail-actions"><button id="focus-device">聚焦器材</button><button id="device-records">查看操作</button></div><div id="detail-related"></div>
+</aside>
+<dialog id="page-sheet" aria-labelledby="sheet-title"><div class="sheet-header"><h2 id="sheet-title"></h2><div class="sheet-header-actions"><button id="expand-sheet" aria-pressed="false" aria-label="扩大面板">⤢</button><button id="close-sheet" aria-label="关闭页面"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6L18 18M6 18L18 6"/></svg></button></div></div><div class="sheet-tabs" id="sheet-tabs" role="tablist" aria-label="页面分类"></div><section class="sheet-content" id="sheet-content" role="tabpanel" tabindex="0"></section></dialog>
+<input id="bundle-file" type="file" accept=".json,application/json" multiple hidden>
+<div class="toast" id="toast" role="status" hidden></div><div id="import-error" class="import-error" role="alert" hidden><span></span><button aria-label="关闭导入错误">×</button></div><span class="sr-only" id="selection-status" role="status"></span>
+<noscript><p class="noscript">请启用 JavaScript 后打开本地火星实验室。页面不需要联网。</p></noscript>
+<script type="module">/* VIEWER_SCRIPT */</script>
+</body>
+</html>

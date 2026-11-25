@@ -1,0 +1,147 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1120" viewBox="0 0 1680 1120" role="img" aria-labelledby="title desc">
+  <title id="title">火星实验器材升级概念：让工作过程成为画面的主角</title>
+  <desc id="desc">静态设计示意，非本轮实验回放。中央近景展示龙门分液站装载、圆形离心机运行、高体确认仪待机。右侧以文字和不同图形说明工作状态。底部说明前端页面的全景、区域、点选、聚焦和记录查看交互。</desc>
+  <defs>
+    <style>
+      text { font-family: 'Noto Sans SC','Microsoft YaHei',sans-serif; fill:#20313f; }
+      .title { font-size:36px; font-weight:700; }
+      .subtitle { font-size:19px; fill:#526575; }
+      .heading { font-size:23px; font-weight:700; }
+      .name { font-size:21px; font-weight:650; }
+      .body { font-size:18px; }
+      .small { font-size:16px; fill:#526575; }
+      .leader { fill:none; stroke:#6a7e8c; stroke-width:1.5; }
+      .edge { stroke:#6a7e8c; stroke-width:1.6; stroke-linejoin:round; }
+      .structure { stroke:#526575; stroke-width:2.2; stroke-linejoin:round; }
+      .active { stroke:#2a78d6; stroke-width:4; fill:none; stroke-linecap:round; }
+      .flow { stroke:#2a78d6; stroke-width:3; fill:none; stroke-linecap:round; }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M1 1L6 4L1 7" fill="none" stroke="#2a78d6" stroke-width="1.5"/></marker>
+    <pattern id="warning-hatch" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0" stroke="#9e6717" stroke-width="1" opacity=".35"/></pattern>
+  </defs>
+  <rect width="1680" height="1120" fill="#f5f7fa"/>
+  <rect x="0" width="12" height="1120" fill="#a9644d"/>
+  <text x="56" y="62" class="title">让器材的工作过程成为画面的主角</text>
+  <text x="56" y="99" class="subtitle">火星基地场景升级　保留等距剖面，放大器材、阶段与交接</text>
+  <rect x="1350" y="34" width="274" height="40" rx="5" fill="#e7edf1"/>
+  <text x="1487" y="60" text-anchor="middle" class="small" style="font-weight:650">设计示意　非实验回放</text>
+  <line x1="56" y1="124" x2="1624" y2="124" stroke="#c9d3dc"/>
+
+  <rect x="56" y="148" width="1132" height="582" rx="8" fill="#fff" stroke="#d6dfe6"/>
+  <text x="82" y="189" class="heading">器材近景</text>
+  <text x="82" y="220" class="small">名称、部件动作和工作阶段同时可见；环境退到次要位置。</text>
+
+  <g aria-label="实验室剖面示意，设备造型与状态相互独立">
+    <path d="M138 437L575 251L1123 456L683 654Z" fill="#a9644d" opacity=".23"/>
+    <path d="M166 430L575 265L1095 459L684 631Z" fill="#dce5eb" class="edge"/>
+    <path d="M166 430L684 631L684 646L166 445Z" fill="#b4c2cd" class="edge"/>
+    <path d="M684 631L1095 459L1095 474L684 646Z" fill="#96a8b6" class="edge"/>
+    <path d="M166 430L575 265L575 241L166 405Z" fill="#e7edf1" class="edge"/>
+    <path d="M575 265L1095 459L1095 435L575 241Z" fill="#cbd7e0" class="edge"/>
+    <g fill="none" stroke="#c8d5de" stroke-width="1">
+      <path d="M275 386L794 587M371 348L890 548M475 305L993 505"/>
+      <path d="M294 480L706 315M425 531L837 365M553 581L966 412"/>
+    </g>
+    <path d="M598 611L816 517L884 544" fill="none" stroke="#fff" stroke-width="8" opacity=".65"/>
+
+    <g transform="translate(316 385)" aria-label="自动分液站：正在装载，龙门架和样品托盘形成独立轮廓">
+      <title>自动分液站：龙门架、移液头和外露孔板；当前示意装载阶段。</title>
+      <ellipse cx="64" cy="82" rx="118" ry="30" fill="#526575" opacity=".13"/>
+      <path d="M-54 26L58 -20L174 24L60 71Z" fill="#e7edf1" class="edge"/>
+      <path d="M-54 26L60 71L60 102L-54 57Z" fill="#aabcc9" class="edge"/>
+      <path d="M60 71L174 24L174 55L60 102Z" fill="#c9d6df" class="edge"/>
+      <path d="M-37 12L-37 -89L-18 -97L-18 4M126 1L126 -103L145 -96L145 9" fill="#e7edf1" class="structure"/>
+      <path d="M-37 -89L78 -137L145 -111L31 -64Z" fill="#d6e0e8" class="structure"/>
+      <path d="M-37 -89L31 -64L31 -46L-37 -71Z" fill="#91a5b5" class="structure"/>
+      <path d="M31 -64L145 -111L145 -93L31 -46Z" fill="#b7c7d3" class="structure"/>
+      <path d="M26 -81L50 -91L72 -83L48 -73Z" fill="#2a78d6" class="edge"/>
+      <path d="M26 -81L48 -73L48 -23L26 -31Z" fill="#88b8e5" class="edge"/>
+      <path d="M48 -73L72 -83L72 -33L48 -23Z" fill="#b7d4ee" class="edge"/>
+      <path d="M34 -28L34 -7M43 -24L43 -3M53 -27L53 -6M63 -31L63 -10" stroke="#526575" stroke-width="3"/>
+      <path d="M-17 29L51 1L121 28L53 56Z" fill="#fff" class="edge"/>
+      <g fill="#7194af" stroke="#fff" stroke-width="1.4">
+        <ellipse cx="19" cy="27" rx="6" ry="3"/><ellipse cx="38" cy="20" rx="6" ry="3"/><ellipse cx="57" cy="12" rx="6" ry="3"/>
+        <ellipse cx="40" cy="35" rx="6" ry="3"/><ellipse cx="59" cy="28" rx="6" ry="3"/><ellipse cx="78" cy="20" rx="6" ry="3"/>
+        <ellipse cx="61" cy="43" rx="6" ry="3"/><ellipse cx="80" cy="36" rx="6" ry="3"/><ellipse cx="99" cy="28" rx="6" ry="3"/>
+      </g>
+      <path d="M21 89L-14 105L-70 85L-34 69Z" fill="#eff5fa" class="edge"/>
+      <g fill="#b6d4ee" stroke="#526575" stroke-width="1.3"><path d="M-43 77L-36 79L-36 61L-43 59Z"/><path d="M-26 83L-19 85L-19 67L-26 65Z"/></g>
+      <path d="M-20 108L16 94" class="flow" marker-end="url(#arrow)"/>
+      <path d="M75 78L113 62L113 72L75 88Z" fill="#526575"/>
+      <circle cx="130" cy="69" r="5" fill="#2a78d6"/>
+    </g>
+
+    <g transform="translate(612 371)" aria-label="离心机：正在处理，圆形转子是主动作部件">
+      <title>离心机：圆形转子窗口与旋转方向；当前示意处理阶段。</title>
+      <ellipse cx="41" cy="54" rx="93" ry="26" fill="#526575" opacity=".13"/>
+      <path d="M-44 -6L37 -40L127 -6L43 30Z" fill="#e7edf1" class="edge"/>
+      <path d="M-44 -6L43 30L43 87L-44 52Z" fill="#b7c7d3" class="edge"/>
+      <path d="M43 30L127 -6L127 50L43 87Z" fill="#93a9bb" class="edge"/>
+      <ellipse cx="39" cy="-8" rx="57" ry="23" fill="#526575" stroke="#20313f" stroke-width="2"/>
+      <ellipse cx="39" cy="-8" rx="47" ry="17" fill="#c4def2"/>
+      <g fill="none" stroke="#2a78d6" stroke-width="5" stroke-linecap="round">
+        <path d="M39 -8L70 -10M39 -8L22 -18M39 -8L19 2"/>
+      </g>
+      <circle cx="39" cy="-8" r="5" fill="#20313f"/>
+      <path d="M-9 -20C21 -39 75 -32 89 -17" class="flow" marker-end="url(#arrow)"/>
+      <path d="M-27 15L16 32L16 53L-27 36Z" fill="#20313f"/>
+      <path d="M-20 25L-9 29M-20 31L4 40" stroke="#b7d4ee" stroke-width="2"/>
+      <circle cx="27" cy="51" r="5" fill="#2a78d6"/>
+    </g>
+
+    <g transform="translate(871 456)" aria-label="确认仪：待机，竖向柱体与独立样品仓形成不同于筛查仪的轮廓">
+      <title>确认仪：高体结构、竖向检测柱和独立样品仓；当前示意待机。</title>
+      <ellipse cx="49" cy="69" rx="100" ry="27" fill="#526575" opacity=".13"/>
+      <path d="M-50 -46L36 -83L122 -49L35 -11Z" fill="#e7edf1" class="edge"/>
+      <path d="M-50 -46L35 -11L35 115L-50 81Z" fill="#c9d6df" class="edge"/>
+      <path d="M35 -11L122 -49L122 77L35 115Z" fill="#91a7b8" class="edge"/>
+      <path d="M-37 -25L-2 -11L-2 61L-37 47Z" fill="#526575" class="edge"/>
+      <path d="M-25 -14L-25 43M-15 -10L-15 47" stroke="#b7c7d3" stroke-width="5"/>
+      <path d="M8 -8L26 -1L26 39L8 32Z" fill="#20313f"/>
+      <path d="M12 5L22 9M12 13L22 17" stroke="#9aabba" stroke-width="2"/>
+      <path d="M-28 71L14 87L14 107L-28 90Z" fill="#e7edf1" class="edge"/>
+      <path d="M49 16L99 -5L99 40L49 61Z" fill="#cad6df" class="edge"/>
+      <path d="M75 14L75 39" stroke="#526575" stroke-width="3"/>
+      <circle cx="22" cy="59" r="5" fill="#6a7e8c"/>
+    </g>
+
+    <path d="M304 288L304 258L171 258" class="leader"/>
+    <rect x="105" y="244" width="225" height="61" rx="5" fill="#fff" stroke="#c9d3dc"/>
+    <text x="121" y="268" class="name">自动分液站</text><text x="121" y="291" class="small">↘ 正在装载样品</text>
+    <path d="M642 330L700 277L803 277" class="leader"/>
+    <rect x="710" y="245" width="221" height="62" rx="5" fill="#fff" stroke="#c9d3dc"/>
+    <circle cx="727" cy="287" r="5" fill="#2a78d6"/><text x="725" y="271" class="name">离心机</text><text x="740" y="293" class="small">↻ 正在处理</text>
+    <path d="M934 425L1040 371L1100 371" class="leader"/>
+    <rect x="963" y="321" width="193" height="63" rx="5" fill="#fff" stroke="#c9d3dc"/>
+    <text x="978" y="347" class="name">确认仪</text><text x="978" y="371" class="small">Ⅱ 待机，部件停靠</text>
+    <text x="82" y="693" class="small">几何动作表达真实阶段；未记录的针头路径、转速与微观机构仅作视觉示意。</text>
+  </g>
+
+  <line x1="1222" y1="148" x2="1222" y2="730" stroke="#c9d3dc"/>
+  <text x="1252" y="188" class="heading">工作状态要有区别</text>
+  <text x="1252" y="218" class="small">动作 + 图形 + 文字，颜色辅助。</text>
+  <g transform="translate(1270 265)"><circle r="17" fill="#e7edf1"/><path d="M-4 -6V6M4 -6V6" stroke="#6a7e8c" stroke-width="3"/><text x="34" y="-1" class="name">待机</text><text x="34" y="24" class="small">部件静止，保持可辨轮廓</text></g>
+  <g transform="translate(1270 342)"><circle r="17" fill="#e8f0f8"/><path d="M-8 0H8M2 -6L8 0L2 6" class="flow"/><text x="34" y="-1" class="name">装载</text><text x="34" y="24" class="small">样品或托盘进入设备</text></g>
+  <g transform="translate(1270 419)"><circle r="17" fill="#e8f0f8"/><path d="M-8 4A9 9 0 1 1 6 6M6 -2V6H-2" class="flow"/><text x="34" y="-1" class="name">处理</text><text x="34" y="24" class="small">转子、移液头、扫描部件工作</text></g>
+  <g transform="translate(1270 496)"><circle r="17" fill="#edf5ed"/><path d="M-8 0L-2 6L9 -7" fill="none" stroke="#0ca30c" stroke-width="3"/><text x="34" y="-1" class="name">完成</text><text x="34" y="24" class="small">动作结束，出现结果标记</text></g>
+  <g transform="translate(1270 573)"><path d="M0 -18L20 16H-20Z" fill="#f9efdc" stroke="#9e6717" stroke-width="1.5"/><path d="M0 -7V3M0 9V10" stroke="#9e6717" stroke-width="3"/><text x="34" y="-1" class="name">等待 / 受阻</text><text x="34" y="24" class="small">停止动作，写明实际原因</text></g>
+  <g transform="translate(1270 650)"><path d="M-9 -17H9L18 -8V8L9 17H-9L-18 8V-8Z" fill="#f8e9e9" stroke="#d03b3b" stroke-width="1.5"/><path d="M-6 -6L6 6M6 -6L-6 6" stroke="#d03b3b" stroke-width="3"/><text x="34" y="-1" class="name">故障 / 限电</text><text x="34" y="24" class="small">工作停止，显示具体状态</text></g>
+
+  <text x="56" y="788" class="heading">页面交互：从基地位置，到器材工作细节</text>
+  <text x="56" y="819" class="small">区域切换、点选器材、展开详情；主动聚焦才放大，保持观察位置稳定。</text>
+  <g transform="translate(56 851)">
+    <rect width="210" height="118" rx="5" fill="#e7edf1"/>
+    <text x="18" y="29" class="small">首次进入</text><text x="18" y="64" class="name">基地全景</text><text x="18" y="94" class="small">识别房间和工作区域</text>
+    <path d="M226 58H246" class="leader"/>
+    <g transform="translate(260)"><rect width="322" height="118" rx="5" fill="#fff" stroke="#8ca5ba"/><rect width="5" height="118" rx="2" fill="#2a78d6"/><text x="20" y="29" class="small">点击分区</text><text x="20" y="64" class="name">区域视图</text><text x="20" y="94" class="small">看清器材名称与当前动作</text></g>
+    <path d="M598 58H618" class="leader"/>
+    <g transform="translate(632)"><rect width="277" height="118" rx="5" fill="#fff" stroke="#c9d3dc"/><text x="18" y="29" class="small">点击设备</text><text x="18" y="64" class="name">锁定选择</text><text x="18" y="94" class="small">状态、样品和关联操作</text></g>
+    <path d="M925 58H945" class="leader"/>
+    <g transform="translate(959)"><rect width="277" height="118" rx="5" fill="#fff" stroke="#c9d3dc"/><text x="18" y="29" class="small">聚焦选中</text><text x="18" y="64" class="name">器材细节</text><text x="18" y="94" class="small">部件动作与阶段清晰可辨</text></g>
+    <path d="M1252 58H1272" class="leader"/>
+    <g transform="translate(1286)"><rect width="282" height="118" rx="5" fill="#e7edf1"/><text x="18" y="29" class="small">查看记录</text><text x="18" y="64" class="name">核对工作过程</text><text x="18" y="94" class="small">只回看有依据的事件与状态</text></g>
+  </g>
+  <line x1="56" y1="1005" x2="1624" y2="1005" stroke="#c9d3dc"/>
+  <text x="56" y="1044" class="body" style="font-weight:650">建议先做三种器材的交互页面原型，再扩展完整基地并接入实验结束后的数据。</text>
+  <text x="56" y="1076" class="small">本图只表达视觉方向。当前实验保持运行，页面开发使用独立样例，不涉及实验时钟。</text>
+</svg>

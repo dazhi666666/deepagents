@@ -1,0 +1,37 @@
+# Optional native preset declaration. Mount the registry and platform tools separately.
+- id: ai4science-preset-cerebrum
+  name: '@deepseek-ai/dsh-agent-preset'
+  config:
+    id: ai4science-cerebrum
+    name: Science coordination
+    description: Starting recommendations for goals, experiment policy and sourced artifacts.
+    plugins:
+      - name: cordis:group
+        group: true
+        isolate:
+          ai4scienceRoleDefaults: true
+        config:
+          - name: '../preset-defaults.ts'
+            config:
+              instructions: Coordinate scientific goals and experiment policy from observed evidence. Preserve parent consent for result references, distinguish acceptance from completion, and publish sourced artifacts. Delegate only as permitted by the organization.
+              tools:
+                - org_create
+                - org_discover
+                - org_authorize
+                - org_revoke
+                - org_send_result
+                - org_finish
+                - send_message
+                - list_agents
+                - wait_agent
+                - experiment_create
+                - experiment_claim
+                - experiment_status
+                - experiment_act
+                - experiment_wait
+                - experiment_escalate
+                - experiment_resolve
+                - experiment_finish
+                - experiment_cancel
+                - artifact_publish
+                - artifact_read

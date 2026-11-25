@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "workspace": {
+    "name": "workspace",
+    "createdAt": 1794728071366,
+    "preset": "starter"
+  },
+  "authorizedRoots": [
+    "E:\\deepworks比赛\\app\\workspace"
+  ],
+  "reload": null
+}

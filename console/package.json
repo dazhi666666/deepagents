@@ -1,0 +1,7 @@
+{
+  "name": "deepagents-console",
+  "private": true,
+  "type": "module",
+  "description": "DeepAgents mission control UI",
+  "scripts": { "start": "node server.mjs" }
+}

@@ -1,0 +1,40 @@
+{
+  "server": "../science/server.mjs",
+  "home": "../../data",
+  "delegate": {
+    "agents": ["midbrain", "cerebellum"],
+    "timeoutMs": 300000
+  },
+  "llmProxy": {
+    "enabled": true,
+    "port": 18080,
+    "providerId": "dspark",
+    "ips": ["10.200.201.13", "10.200.201.14", "10.200.201.15"],
+    "reasoning": "max",
+    "maxOutputTokens": 30000,
+    "outputTokenField": "max_tokens",
+    "keyFile": "../../data/secrets.json"
+  },
+  "systemPrompt": "本工作区有 science_* 采样演示和独立的 Mars v0.6 实验。Mars 会话不套用采样演示的角色限制。先 mars_login(role)，配置中的团队岗位进入 multi，single 进入独立对照世界。\n初始化阶段加入并读取公开任务；全部团队角色登录后由 brain 调用 mars_start，宿主按 requiredRoles 激活其余岗位；single 自己 mars_start。正式运行采用 mars-v06-native-steps/1，模型每次科研推理 step 都经逻辑时间准入，默认间隔至少12 tick，重试沿用同一步位置。共同参与者就绪后先提交意图再推进世界。\n写操作 pending 后下一步读 round_receipts。宿主承接下一步的等待，不需要定时自唤醒，没有 mars_continue。没有立即工作时 mars_wait(until_tick=实际节点) 等有效事件、邮件或目标tick；机械噪音和流程内部步骤保持安静，没有墙钟超时。任务未完成时继续工具循环，不要只写稍后继续就给最终答案。\n模型推理和上下文压缩时世界暂停。mars_send 投递工作消息，宿主负责通知；mars_wake 可显式激活同伴，不能 wait:true 或反复唤醒忙碌角色。所有科研工具向各岗位开放。\nmission_read/research_catalog 读任务和合同，分页limit为1–10，任务用task_id，contract用研究工具名。历史归档通过archive_*或analysis_run中await archiveSql读取，不替代当前实测。研究写工具用input_json JSON字符串和request_key；模型code是同步return有限JSON的函数体，不再包function或箭头函数；注册会校验语法和schema，pending后先用round_receipts确认，再用model_test检查调用方提供的公开inputs数组；executionValid只表示可运行，不代表科学评分或提交成功。research_read可按id读取模型等产物，重名用kind指定；提交用task_id加slot_id及可选revision读取。analysis_run是可await公开绑定的异步函数体；舱名incubator-1..4。\n720前实际接纳baseline，1800前实际接纳final，T3/T4前瞻承诺早于动作。1800后宿主停止新模型请求；允许的已接纳物理工作继续到2400，随后宿主自动结算并无模型投递报告。不得读取源码、隐藏truth、凭据或本地文件，不创建额外成员。",
+  "mars": {
+    "enabled": true,
+    "server": "../mars-server.mjs",
+    "agent": "mars",
+    "schedulingProtocol": "mars-v06-native-steps/1",
+    "home": "../../data/mars-multi-8-r6b",
+    "truth": "../../data/mars/truth.json",
+    "salt": "b3ce397cef7248745535d8d5c484f57ef903b9ec3e934e80621d5b7459111322",
+    "mode": "multi",
+    "dual": true,
+    "teamSize": 8,
+    "jointTrial": "shared-plan-v3",
+    "researchWorkflow": "delivery-v2",
+    "singleHome": "../../data/mars-single-8-r6b",
+    "dashboard": false,
+    "budgetUsd": null,
+    "budgetTokens": null,
+    "modelBarrier": true,
+    "controlRetryMs": 250,
+    "controlRetryMaxMs": 5000
+  }
+}

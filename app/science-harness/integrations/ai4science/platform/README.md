@@ -1,0 +1,33 @@
+# AI4Science agent tools
+
+English | [中文](README.zh.md)
+
+## Reference
+
+Result-reference tools accept explicit member IDs or unique visible roles: `org_send_result` uses `target_id` or `target_role`; `org_authorize` uses `child_id` or `child_role` and `peer_child_id` or `peer_role`. Supply exactly one selector per member. Role selectors require `org_discover`; missing or ambiguous roles fail, and discovery grants no permission. Native ancestry, both parents' consent and result-access checks remain. Ordinary messages and inbox waits use native `send_message({agent,message})`, `list_agents` and `wait_agent({timeout_ms})`; waits return `{timedOut}` and require at least 10000 ms. The former `org_message` and `org_wait` tools are removed.
+
+Organization membership and quotas recover from durable facts scoped to the freshly enrolled native root; old IDs and consents confer no authority. Composition code awaits `createOrganization` and `registerRoot`, supplying both fact hooks or using host storage-domain. See the [membership migration](../upgrade-guide/v0.2.2-rc.1/organization-membership/README.md).
+
+Experiment reads use schema-4 `experiment_view` under a consistent snapshot; facts, audit and projection update together. The operator's `archive` command moves eligible settled audit under `retentionDays` (default 30), preserving sequence and access checks across main and archive. It never moves generic facts or execution records and never queries active devices. See the [projection migration](../upgrade-guide/v0.2.2-rc.1/experiment-projection/README.md).
+
+`execution_facts(operations_only=true)` omits project history while returning accessible operations. Omit the flag to keep the full response. Use `execution_result(operation_id)` when the operation is already known.
+
+The [first-loop scene](scenes/first-loop.ts) exposes structured arguments: `scenario_submit(requestKey, phase, conditions, decisionId?)`, `scenario_analyze(operationIds, method, rationale)`, and `scenario_choose_followup(branch, analysisIds, conditions, rationale)`. Each condition contains `value` and `samples`. These tools no longer accept JSON encoded inside `request_json`; see the [migration guide](../upgrade-guide/v0.2.1-alpha.2/science-scene-tools/README.md).
+
+`scenario_report(markdown, source_ids?)` infers sources from links to existing project artifacts and operation output files. Project paths are normalized relative to the report directory using forward slashes on every platform; returned local paths are also accepted as input. Linked sources must remain accessible and pass size/hash checks. Explicit `source_ids` must be artifact IDs with corresponding links, never operation IDs. Broken links under `project-artifacts/`, `artifacts/`, or `../artifacts/` are rejected. Scientific conclusions are not scored.
+
+The scene's Loader entry `apply` returns no installation object; in-process compositions use `mountScene`. Scene-specific branch names and experiment stages remain confined to this example. These tool changes introduce no fixed team size, forced message exchange, model-request budget, or project runtime limit; execution and experiment policies remain configured separately.
+
+## Optional role presets
+
+Roles may select `ai4science-cerebrum`, `ai4science-midbrain`, `ai4science-cerebellum`, or a custom native preset ID through `preset`. Mount the native `agent-preset-registry` explicitly with the profile's chosen default; [presets.patch.yml](presets.patch.yml) only adds the three optional declarations. Templates recommend instructions and tools through the isolated `ai4scienceRoleDefaults` service; they impose no model provider, agent count, creation matrix or tree. See the [compact preset example](examples/sampling.compact.presets.organization.json), which uses the same sampling method as the [explicit-role example](examples/sampling.compact.organization.json).
+
+Explicit role `instructions` and `tools` replace template recommendations, including an empty tool list; model fields override recommendations individually and otherwise inherit the native route. A custom preset without `ai4scienceRoleDefaults` requires explicit instructions and tools. Preset-free roles retain their required instructions, complete model route and tool whitelist. `creates`, `maxInstances`, organization quotas and `relations` remain explicit. Provider grants still come from the host composition's `roleProviders`.
+
+Call `registerRoot` after Host Loader activation. Enrollment rejects missing, broken or leaking presets before accepting organization work; invoking it from a loading Host row fails rather than waiting on its own activation. A blank root may select its role preset; a root with turns must already have that saved identity. Explicit child presets use native `agentPreset`; omission retains native inheritance. Recovery validates the saved preset identity and tool ceiling, refusing removal, replacement or widening of a previously recorded grant; native cold resume uses the current definition of that saved ID. Role overrides remain subject to inherited Host restrictions, with a final call guard covering preset-local tools and exact live participants. Disallowed local tools may remain visible in schemas but cannot execute.
+
+## Execution reads and artifact verification
+
+`execution.ts` owns public authorization, admission and lifecycle coordination. Internal `journal.ts` owns schema migration, short write transactions, read snapshots, audit access and prepared statements; `provider-runtime.ts` owns Provider calls, observations, cancellation acknowledgements and lock retirement after real settlement. Public APIs and schema 4 remain unchanged. Statements belong to one connection and cache SQL programs only; every read uses current facts and grants. Operation listing retrieves operations and artifacts in two queries in one snapshot. Reference Providers retain their per-call connection lifetime.
+
+Dashboard state checks use a bounded per-dashboard verification cache. `artifactVerificationCacheEntries` accepts 0–100000, defaults to 1024, and disables reuse at 0. Reuse compares real path, device, inode, size, nanosecond mtime/ctime and expected hash/bytes; current access, recursive source references and real paths are checked on every traversal. This depends on reliable filesystem change metadata; use 0 when that cannot be relied on. Artifact content reads, downloads, exports and publish source validation always read and hash bytes. The cache retains neither content nor authorization; reads also compare descriptor and path identities before and after reading.

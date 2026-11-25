@@ -1,0 +1,258 @@
+/** First-loop application on v0.1: scientific phases and statistics remain entirely in this example. */
+import type { Context } from '@deepseek-ai/cordis'
+import type { ParameterSchemaSpec } from '@deepseek-ai/dsh-tools'
+import { createJsonToolRegistrar } from '../tool.ts'
+import { z } from 'zod'
+import { relative, resolve, sep } from 'node:path'
+import { mountPlatform, type Config as PlatformConfig } from '../plugin.ts'
+import type { OperationContext, Json } from '../sdk.ts'
+import type { ExecutionEngine } from '../execution.ts'
+import { Artifacts } from '../artifacts.ts'
+import { analyzeReadings, type Reading } from './first-loop-analysis.ts'
+
+export const name = 'ai4science-first-loop-v01'
+export const inject = ['agents', 'subagents', 'tools', 'systemPrompt', 'scienceExchange']
+export interface Config extends PlatformConfig {
+  instrumentProvider: string
+}
+const blocks = z
+  .array(z.object({ value: z.number().min(-1).max(1), samples: z.number().int().min(1).max(8) }).strict())
+  .min(1)
+  .max(3)
+const submitSchema = z
+  .object({
+    requestKey: z.string().min(1),
+    phase: z.enum(['initial', 'followup']),
+    conditions: blocks,
+    decisionId: z.string().optional(),
+  })
+  .strict()
+
+/** Scenario state consists only of sourced facts in the platform store; it owns neither devices nor Agents. */
+export class FirstLoopScenario {
+  constructor(
+    private readonly engine: ExecutionEngine,
+    private readonly artifacts: Artifacts,
+    private readonly providerId: string,
+  ) {}
+  async submit(c: OperationContext, role: string, input: z.infer<typeof submitSchema>) {
+    const request = submitSchema.parse(input)
+    const branch = role === 'midbrain-a' ? 'A' : role === 'midbrain-b' ? 'B' : null
+    if (!branch) throw new Error('Only the scenario instrument roles submit')
+    const facts = this.engine
+      .readFacts(c)
+      .filter((f) => f.kind === 'scenario-run')
+      .map((f) => f.data as { branch: string; phase: string; requestKey: string; operationId: string })
+    if (
+      request.phase === 'initial' &&
+      facts.some((f) => f.branch === branch && f.phase === 'initial' && f.requestKey !== request.requestKey)
+    )
+      throw new Error('Scenario permits one initial request per branch')
+    if (request.phase === 'followup') {
+      if (!request.decisionId) throw new Error('Followup requires a saved scenario decision')
+      const selected = this.artifacts.read(c, request.decisionId)
+      const decision = JSON.parse(selected.content)
+      if (
+        decision.kind !== 'first-loop-followup' ||
+        decision.branch !== branch ||
+        JSON.stringify(decision.conditions) !== JSON.stringify(request.conditions)
+      )
+        throw new Error('Followup differs from saved decision')
+    }
+    const operation = await this.engine.submit(c, {
+      providerId: this.providerId,
+      requestKey: request.requestKey,
+      input: { conditions: request.conditions },
+    })
+    if (!facts.some((f) => f.operationId === operation.id))
+      this.engine.recordFact(c, 'scenario-run', {
+        branch,
+        phase: request.phase,
+        requestKey: request.requestKey,
+        operationId: operation.id,
+        decisionId: request.decisionId ?? null,
+      })
+    return operation
+  }
+  analyze(
+    c: OperationContext,
+    input: {
+      operationIds: string[]
+      method: 'condition-summary' | 'condition-order-regression'
+      rationale: string
+    },
+  ) {
+    if (!input.operationIds.length || !input.rationale.trim())
+      throw new Error('Specify observed operations and rationale')
+    const sources: string[] = []
+    const readings: Reading[] = []
+    for (const id of input.operationIds) {
+      const operation = this.engine.get(c, id)
+      if (operation.state !== 'succeeded' || operation.providerId !== this.providerId)
+        throw new Error('Analysis needs completed instrument observations')
+      const raw = operation.artifacts.find((a) => a.mediaType === 'application/json')
+      if (!raw) throw new Error('Instrument raw data missing')
+      sources.push(raw.id)
+      const rows = JSON.parse(this.artifacts.read(c, raw.id).content) as Omit<Reading, 'runId'>[]
+      readings.push(...rows.map((row) => ({ ...row, runId: id })))
+    }
+    const analysis = analyzeReadings(readings, input.method)
+    return this.artifacts.publish(c, {
+      mediaType: 'application/json',
+      sources,
+      content: JSON.stringify({ kind: 'first-loop-analysis', ...input, analysis }, null, 2),
+    })
+  }
+  choose(
+    c: OperationContext,
+    input: {
+      branch: 'A' | 'B'
+      analysisIds: string[]
+      conditions: z.infer<typeof blocks>
+      rationale: string
+    },
+  ) {
+    blocks.parse(input.conditions)
+    if (!input.rationale.trim()) throw new Error('Record the additional experiment rationale')
+    const covered = new Set(
+      input.analysisIds.flatMap((id) => {
+        const a = JSON.parse(this.artifacts.read(c, id).content)
+        if (a.kind !== 'first-loop-analysis') throw new Error('Decision must cite analysis artifacts')
+        return a.operationIds as string[]
+      }),
+    )
+    const runs = this.engine
+      .readFacts(c)
+      .filter((f) => f.kind === 'scenario-run')
+      .map((f) => f.data as { branch: string; phase: string; operationId: string })
+    if (
+      !['A', 'B'].every((branch) =>
+        runs.some((r) => r.branch === branch && r.phase === 'initial' && covered.has(r.operationId)),
+      )
+    )
+      throw new Error('Decision needs both initial branches analyzed')
+    return this.artifacts.publish(c, {
+      mediaType: 'application/json',
+      sources: input.analysisIds,
+      content: JSON.stringify({ kind: 'first-loop-followup', ...input }, null, 2),
+    })
+  }
+  report(c: OperationContext, input: { markdown: string; sources: string[] }) {
+    const runs = this.engine
+      .readFacts(c)
+      .filter((f) => f.kind === 'scenario-run')
+      .map((f) => f.data as { branch: string; phase: string; operationId: string })
+    if (
+      !['A', 'B'].every((branch) =>
+        runs.some(
+          (r) =>
+            r.branch === branch &&
+            r.phase === 'initial' &&
+            this.engine.get(c, r.operationId).state === 'succeeded',
+        ),
+      ) ||
+      !runs.some((r) => r.phase === 'followup' && this.engine.get(c, r.operationId).state === 'succeeded')
+    )
+      throw new Error('Scenario report requires both initial runs and an executed followup')
+    const operations = this.engine.list(c)
+    if (input.sources.some(id => operations.some(op => op.id === id)))
+      throw new Error('source_ids accepts artifact IDs, not operation IDs. Omit source_ids and link the actual artifacts in markdown.')
+    let markdown = input.markdown
+    const sources = new Set<string>()
+    const candidates = [...this.artifacts.list(c), ...operations.flatMap(op => op.artifacts)].map(artifact => {
+      const relativePath = relative(resolve(this.engine.directory, 'project-artifacts'), resolve(this.engine.directory, artifact.path))
+      return { artifact, relativePath, link: relativePath.split(sep).join('/'), storedLink: artifact.path.split(sep).join('/') }
+    })
+    const paths = new Set(candidates.flatMap(({ link, storedLink }) => [link, storedLink]))
+    for (const match of markdown.matchAll(/\]\(([^)]+)\)/g)) {
+      const target = match[1]!.split(sep).join('/')
+      if (/^(?:project-artifacts\/|(?:\.\.\/)?artifacts\/)/.test(target) && !paths.has(target))
+        throw new Error(`Unknown report artifact link; link an actual source artifact: ${target}`)
+    }
+    for (const { artifact, relativePath, link, storedLink } of candidates) {
+      const targets = new Set([artifact.path, relativePath, link, storedLink])
+      if (![...targets].some(target => markdown.includes(`](${target})`))) continue
+      this.artifacts.read(c, artifact.id)
+      for (const target of targets) markdown = markdown.replaceAll(`](${target})`, `](${link})`)
+      sources.add(artifact.id)
+    }
+    for (const source of input.sources) {
+      this.artifacts.read(c, source)
+      if (!sources.has(source)) throw new Error(`Declared report source needs a link to its relative file path: ${source}`)
+    }
+    if (!sources.size) throw new Error('Report requires links to actual source artifacts')
+    return this.artifacts.publish(c, { mediaType: 'text/markdown', content: markdown, sources: [...new Set([...input.sources, ...sources])] })
+  }
+}
+/** Load platform and scientific tools for a composition; the Loader entry point is apply.
+ * @returns The mounted platform services.
+ */
+export async function mountScene(ctx: Context, config: Config) {
+  const { instrumentProvider, ...base } = config
+  const platform = await mountPlatform(ctx, base)
+  const scenario = new FirstLoopScenario(platform.engine, platform.artifacts, instrumentProvider)
+  const registerTool = createJsonToolRegistrar(ctx, (execution, name) => {
+    if (!execution.agent) throw new Error('Live scenario participant required')
+    return { context: platform.access(execution.agent, name), role: platform.org.assertActor(execution.agent).role }
+  })
+  const register = (
+    name: string,
+    parameters: ParameterSchemaSpec,
+    run: (args: Record<string, unknown>, context: OperationContext, role: string) => unknown,
+  ) => registerTool(name, `First-loop example: ${name}. Scientific stages are scenario policy.`, parameters,
+    (args, _execution, grant) => run(args, grant.context, grant.role))
+  const id = { type: 'string', required: true } as const
+  const conditions = {
+    type: 'array', required: true,
+    items: {
+      type: 'object', additionalProperties: false,
+      properties: { value: { type: 'number', required: true }, samples: { type: 'integer', required: true } },
+    },
+  } as const
+  register('scenario_submit', {
+    requestKey: id, phase: { type: 'string', enum: ['initial', 'followup'], required: true },
+    conditions, decisionId: { type: 'string' },
+  }, (a, c, role) => scenario.submit(c, role, submitSchema.parse(a)))
+  register('scenario_analyze', {
+    operationIds: { type: 'array', items: { type: 'string' }, required: true },
+    method: { type: 'string', enum: ['condition-summary', 'condition-order-regression'], required: true },
+    rationale: id,
+  }, (a, c) => scenario.analyze(c, z.object({
+    operationIds: z.array(z.string()),
+    method: z.enum(['condition-summary', 'condition-order-regression']),
+    rationale: z.string(),
+  }).strict().parse(a)))
+  register('scenario_choose_followup', {
+    branch: { type: 'string', enum: ['A', 'B'], required: true },
+    analysisIds: { type: 'array', items: { type: 'string' }, required: true },
+    conditions, rationale: id,
+  }, (a, c, role) => {
+    if (role !== 'lead') throw new Error('Only scenario lead chooses followup')
+    return scenario.choose(c, z.object({
+      branch: z.enum(['A', 'B']), analysisIds: z.array(z.string()),
+      conditions: blocks, rationale: z.string(),
+    }).strict().parse(a))
+  })
+  register(
+    'scenario_report',
+    { markdown: id, source_ids: { type: 'array', items: { type: 'string' }, description: 'Optional artifact IDs; omit to infer sources from links in markdown. Never use operation IDs.' } },
+    (a, c, role) => {
+      if (role !== 'lead') throw new Error('Only scenario lead publishes')
+      return scenario.report(c, {
+        markdown: String(a.markdown),
+        sources: z.array(z.string()).parse(a.source_ids ?? []),
+      })
+    },
+  )
+  platform.engine.recordFact(
+    platform.engine.issueContext(platform.org.config.project, 'scenario-registration', []),
+    'scenario-configured',
+    { name, provider: instrumentProvider } as Json,
+  )
+  return platform
+}
+
+/** Cordis entry point returns no installation object; ownership remains in registered effects. */
+export async function apply(ctx: Context, config: Config): Promise<void> {
+  await mountScene(ctx, config)
+}

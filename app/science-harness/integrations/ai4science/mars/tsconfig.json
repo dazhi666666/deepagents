@@ -1,0 +1,30 @@
+{
+  "extends": "../greenhouse/tsconfig.json",
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "vitest.config.ts"
+  ],
+  "references": [
+    { "path": "../../../../science-harness/vendor/cordis" },
+    { "path": "../../../../science-harness/vendor/loader" },
+    { "path": "../../../../science-harness/vendor/include" },
+    { "path": "../../../../science-harness/packages/core/agent" },
+    { "path": "../../../../science-harness/packages/core/agent-loop" },
+    { "path": "../../../../science-harness/packages/core/session" },
+    { "path": "../../../../science-harness/packages/core/tools" },
+    { "path": "../../../../science-harness/packages/core/system-prompt" },
+    { "path": "../../../../science-harness/packages/llm/llm" },
+    { "path": "../../../../science-harness/packages/session/session-projection" },
+    { "path": "../../../../science-harness/packages/session/session-persistence-jsonl" },
+    { "path": "../../../../science-harness/packages/session-query/session-query-sqlite" },
+    { "path": "../../../../science-harness/packages/subagent/subagent" },
+    { "path": "../../../../science-harness/packages/subagent/subagent-spawn-in-process" },
+    { "path": "../../../../science-harness/packages/storage/storage" },
+    { "path": "../../../../science-harness/packages/storage/storage-json" },
+    { "path": "../../../../science-harness/packages/storage/storage-domain" },
+    { "path": "../../../../science-harness/packages/team/agent-team" },
+    { "path": "../../../../science-harness/packages/team/tool-agent-team" }
+  ]
+}

@@ -1,0 +1,15 @@
+# Opt-in declarations only. The profile must mount agent-preset-registry with its own default.
+# Role preset fields select these ids explicitly; no model routes or organization topology are imposed.
+- insert:
+    - id: ai4science-cerebrum-template
+      name: cordis:include
+      config:
+        path: './presets/cerebrum.yml'
+    - id: ai4science-midbrain-template
+      name: cordis:include
+      config:
+        path: './presets/midbrain.yml'
+    - id: ai4science-cerebellum-template
+      name: cordis:include
+      config:
+        path: './presets/cerebellum.yml'

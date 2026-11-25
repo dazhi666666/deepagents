@@ -1,0 +1,42 @@
+{
+  "passed": true,
+  "runId": "01b44445-1215-4e53-8c97-67fe27458055",
+  "source": "experiment",
+  "operations": 98,
+  "tabs": [
+    "research:0",
+    "research:1",
+    "research:2",
+    "research:3",
+    "research:4",
+    "records:0",
+    "records:1",
+    "records:2",
+    "records:3",
+    "team:0",
+    "team:1",
+    "team:2",
+    "resources:0",
+    "resources:1",
+    "resources:2",
+    "resources:3",
+    "compare:0",
+    "compare:1",
+    "compare:2"
+  ],
+  "rawRecords": 16,
+  "playback": true,
+  "atomicImport": true,
+  "fixtureAndExperimentSeparated": true,
+  "pairedSample": true,
+  "worldCameraPreserved": true,
+  "chartHover": true,
+  "viewports": [
+    1440,
+    1024,
+    390
+  ],
+  "reducedMotion": true,
+  "remoteRequests": 0,
+  "errors": []
+}

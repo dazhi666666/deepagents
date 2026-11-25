@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DeepAgents · 控制台</title>
+    <style>
+      :root { color-scheme: light; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; font: 14px/1.5 "Microsoft YaHei", system-ui, sans-serif; background: #f7f6f2; color: #20251f; }
+      .shell { display: grid; grid-template-columns: 208px 1fr; height: 100vh; }
+      .rail { display: flex; flex-direction: column; gap: 6px; padding: 22px 14px; background: #16231d; color: #eef3ee; }
+      .brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 22px; font-size: 17px; font-weight: 700; letter-spacing: 0.01em; }
+      .mark { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: #2f6f57; font-size: 13px; font-weight: 700; }
+      .label { padding: 8px 10px 4px; font-size: 11px; letter-spacing: 0.14em; color: #8fa398; }
+      .item { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 12px; border: 0; border-radius: 8px; background: none; color: #d6e2d9; font: inherit; text-align: left; cursor: pointer; }
+      .item:hover { background: #22332a; }
+      .item[aria-current="page"] { background: #2f6f57; color: #fff; }
+      .item span:first-child { width: 18px; text-align: center; opacity: 0.85; }
+      .foot { margin-top: auto; padding: 12px 10px 0; border-top: 1px solid #2a3a31; font-size: 11px; color: #8fa398; }
+      .stage { position: relative; min-width: 0; }
+      iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; background: #f7f6f2; }
+      iframe[hidden] { display: none; }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="rail">
+        <div class="brand"><span class="mark">DA</span>DeepAgents</div>
+        <div class="label">控制台</div>
+        <button class="item" data-tab="mars" aria-current="page"><span>▣</span><span>火星基地</span></button>
+        <button class="item" data-tab="workspace"><span>⚗</span><span>科研工作台</span></button>
+        <div class="foot">DeepAgents · 任务控制中心</div>
+      </aside>
+      <main class="stage">
+        <iframe data-pane="mars" title="火星基地" src="/mars/?embed=1"></iframe>
+        <iframe data-pane="workspace" title="科研工作台" src="/workspace/?embed=1" hidden></iframe>
+      </main>
+    </div>
+    <script>
+      (() => {
+        const token = location.hash.slice(1)
+        if (!token) return
+        for (const pane of document.querySelectorAll('iframe')) pane.src = pane.src.split('#')[0] + '#' + token
+      })()
+      const buttons = [...document.querySelectorAll('.item')]
+      const panes = [...document.querySelectorAll('iframe')]
+      function show(tab) {
+        for (const button of buttons) button.toggleAttribute('aria-current', button.dataset.tab === tab)
+        for (const pane of panes) pane.hidden = pane.dataset.pane !== tab
+        try { localStorage.setItem('deepagents-console-tab', tab) } catch {}
+      }
+      for (const button of buttons) button.onclick = () => show(button.dataset.tab)
+      let saved = 'mars'
+      try { saved = localStorage.getItem('deepagents-console-tab') || 'mars' } catch {}
+      const requested = new URLSearchParams(location.search).get('tab')
+      const initial = requested === 'workspace' || requested === 'mars' ? requested : saved
+      show(initial === 'workspace' ? 'workspace' : 'mars')
+    </script>
+  </body>
+</html>
